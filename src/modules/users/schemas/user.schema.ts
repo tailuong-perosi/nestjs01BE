@@ -13,29 +13,34 @@ export class UrlItem {
 
 @Schema({ timestamps: true, versionKey: false })
 export class Users {
-  @Prop({type: String, required: true})
+  @Prop({ type: String, required: true })
   username: string;
 
-  @Prop({type: String})
+  @Prop({ type: String })
   password: string;
 
-  @Prop({type: String})
+  @Prop({ type: String })
   phone: string;
 
-  @Prop({type: String})
+  @Prop({ type: String })
   email: string;
 
-  @Prop({type: String, default: 'user'})
+  @Prop({ type: String, default: 'user' })
   role: string;
 
-  @Prop({type: Boolean, default: false})
+  @Prop({ type: Boolean, default: false })
   isActive: boolean;
 
-  createdAt?: Date;   // tự động có
+  createdAt?: Date; // tự động có
   updatedAt?: Date;
-  
+
   @Prop({ type: [UrlItem], default: [] })
   urls: UrlItem[];
 
+  @Prop({ default: false })
+  isVerified: boolean;
+
+  @Prop()
+  verificationToken?: string;
 }
 export const UserSchema = SchemaFactory.createForClass(Users);

@@ -4,11 +4,13 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UsersModule } from './modules/users/users.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 
 @Module({
   imports: [
     UsersModule,
+    AuthModule,
     ConfigModule.forRoot({ isGlobal: true, }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
