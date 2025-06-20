@@ -2,7 +2,8 @@
 /dist
 /node_modules
 /build
-
+docker-compose.yml
+/mongo_data
 # Logs
 logs
 *.log

@@ -7,12 +7,15 @@ import { DetailUserService } from '../users/services/detail.service';
 import { JwtService } from '@nestjs/jwt';
 import { comparePasswords } from 'src/helpers/ultil';
 import { UpdateUserService } from '../users/services/update.service';
+import { RegisterDto } from './dto/register.dto';
+import { CreateUserService } from '../users/services/create.service';
 @Injectable()
 export class AuthService {
   constructor(
     private readonly detailUserService: DetailUserService,
     private readonly jwtService: JwtService,
     private readonly updateUserService: UpdateUserService,
+    private readonly createUserService: CreateUserService
   ) {}
 
   async signIn(email: string, pass: string): Promise<any> {
@@ -44,6 +47,16 @@ export class AuthService {
       access_token: await this.jwtService.signAsync(payload),
     };
   }
+
+  register = async(data: RegisterDto)=>{
+    return await this.createUserService.handleRegister(data)
+  }
+
+
+
+
+
+
   // gửi mail để xác thực
   async verifyEmail(token: string) {
     const user = await this.detailUserService.findByToken(token);

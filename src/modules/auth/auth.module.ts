@@ -7,6 +7,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './passports/local.strategy';
 import { JwtStrategy } from './passports/jwt.strategy';
+import { SendMail } from 'src/helpers/sendMail';
 @Module({
   imports:[
     ConfigModule.forRoot({ isGlobal: true }), // Đảm bảo config dùng toàn app
@@ -21,7 +22,7 @@ import { JwtStrategy } from './passports/jwt.strategy';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy, SendMail],
   exports: [AuthService]
 })
 export class AuthModule {}

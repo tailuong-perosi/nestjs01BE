@@ -1,26 +1,21 @@
+import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
-import * as nodemailer from 'nodemailer';
 
 @Injectable()
 export class SendMail {
-  private transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false,
-    auth: {
-      user: process.env.SMTP_USER, // email gửi
-      pass: process.env.SMTP_PASS, // password ứng dụng
-    },
-  });
 
-  async sendVerificationEmail(to: string, token: string) {
-    const url = `${process.env.APP_URL}/auth/verify-email?token=${token}`;
+  constructor(private readonly mailerService: MailerService) {}
+  public testSendMail() {
+    this.mailerService
+      .sendMail({
+        to: 'shawluong@gmail.com', // list of receivers
+        subject: 'Testing Nest MailerModule ✔', // Subject line
+        text: 'welcome', // plaintext body
+        html: '<b>welcome to APP NESTJS </b>', // HTML body content
+      })
+      .then(() => {})
+      .catch(() => {});
 
-    await this.transporter.sendMail({
-      from: `"No Reply" <${process.env.SMTP_USER}>`,
-      to,
-      subject: 'Xác nhận đăng ký tài khoản',
-      html: `<p>Vui lòng nhấn vào link bên dưới để xác nhận email:</p><a href="${url}">${url}</a>`,
-    });
+      return "ok"
   }
 }

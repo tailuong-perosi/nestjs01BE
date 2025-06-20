@@ -42,5 +42,8 @@ export class Users {
 
   @Prop()
   verificationToken?: string;
+
+  @Prop()
+  verificationExpired?: Date
 }
 export const UserSchema = SchemaFactory.createForClass(Users);
