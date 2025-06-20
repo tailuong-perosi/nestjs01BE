@@ -11,18 +11,26 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
-import { AuthGuard } from '@nestjs/passport';
 import { LocalAuthGuard } from './passports/local-auth.guard';
-import { JwtAuthGuard } from './passports/jwt-auth.guard';
+import { Public } from 'src/decorator/customize';
+import { RegisterDto } from './dto/register.dto';
+import { SendMail } from 'src/helpers/sendMail';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private readonly testSendMail: SendMail) {}
 
   @HttpCode(HttpStatus.OK)
   @Post('login')
+  @Public()
   signIn(@Body() signInDto: LoginDto) {
     return this.authService.signIn(signInDto.email, signInDto.password);
+  }
+
+  @Post('register')
+  @Public()
+  signUP(@Body() registerDto: RegisterDto) {
+    return this.authService.register(registerDto)
   }
 
   @Get('verify-email')
@@ -32,14 +40,22 @@ export class AuthController {
 
   // Dùng passport để đăng nhập thư viện xử lý logic
   @Post('login-handle')
+  @Public()
   @UseGuards(LocalAuthGuard) 
   async login(@Request() req) {
     return this.authService.login(req.user);
   }
   // lấy profile bằng thư viện guard
-   @UseGuards(JwtAuthGuard)
+  //  @UseGuards(JwtAuthGuard)
   @Get('profile')
   getProfile(@Request() req) {
     return req.user;
+  }
+
+  //send mail
+  @Get('mail')
+  @Public()
+  sendMail(){
+    return this.testSendMail.testSendMail()
   }
 }
