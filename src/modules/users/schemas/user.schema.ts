@@ -40,10 +40,10 @@ export class Users {
   @Prop({ default: false })
   isVerified: boolean;
 
-  @Prop()
-  verificationToken?: string;
+  @Prop({default: ''})
+  codeID?: string;
 
   @Prop()
-  verificationExpired?: Date
+  codeExpired?: Date
 }
 export const UserSchema = SchemaFactory.createForClass(Users);
