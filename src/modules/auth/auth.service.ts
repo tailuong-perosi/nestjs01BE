@@ -52,18 +52,13 @@ export class AuthService {
     return await this.createUserService.handleRegister(data)
   }
 
-
-
-
-
-
-  // gửi mail để xác thực
-  async verifyEmail(token: string) {
-    const user = await this.detailUserService.findByToken(token);
+  // xác thực code
+  async verifyEmail(code: string) {
+    const user = await this.detailUserService.findByCode(code);
     if (!user) {
-      throw new BadRequestException('Token không hợp lệ');
+      throw new BadRequestException('Code không hợp lệ');
     }
-    const data = { ...user, isVerified: true, verificationToken: 'OK' };
+    const data = { ...user, isVerified: true, codeID: '' };
     await this.updateUserService.update(data.id, data);
 
     return { message: 'Xác nhận email thành công!' };
@@ -87,6 +82,4 @@ export class AuthService {
       access_token: this.jwtService.sign(payload),
     };
   }
-
-  
 }

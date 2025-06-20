@@ -3,19 +3,26 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class SendMail {
-
   constructor(private readonly mailerService: MailerService) {}
-  public testSendMail() {
+  public testSendMail(
+    to: string, 
+    name: string,
+    activationCode: string,
+  ) {
     this.mailerService
       .sendMail({
-        to: 'shawluong@gmail.com', // list of receivers
+        to: to, // list of receivers
         subject: 'Testing Nest MailerModule ✔', // Subject line
         text: 'welcome', // plaintext body
-        html: '<b>welcome to APP NESTJS </b>', // HTML body content
+        template: 'register.hbs',
+        context: {
+          name: name,
+          activationCode: activationCode,
+        },
       })
       .then(() => {})
       .catch(() => {});
 
-      return "ok"
+    return 'ok';
   }
 }

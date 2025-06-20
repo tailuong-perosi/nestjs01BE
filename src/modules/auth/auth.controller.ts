@@ -14,11 +14,10 @@ import { LoginDto } from './dto/login.dto';
 import { LocalAuthGuard } from './passports/local-auth.guard';
 import { Public } from 'src/decorator/customize';
 import { RegisterDto } from './dto/register.dto';
-import { SendMail } from 'src/helpers/sendMail';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService, private readonly testSendMail: SendMail) {}
+  constructor(private authService: AuthService) {}
 
   @HttpCode(HttpStatus.OK)
   @Post('login')
@@ -34,8 +33,8 @@ export class AuthController {
   }
 
   @Get('verify-email')
-  async verifyEmail(@Query('token') token: string) {
-    return this.authService.verifyEmail(token);
+  async verifyEmail(@Query('code') code: string) {
+    return this.authService.verifyEmail(code);
   }
 
   // Dùng passport để đăng nhập thư viện xử lý logic
@@ -52,10 +51,4 @@ export class AuthController {
     return req.user;
   }
 
-  //send mail
-  @Get('mail')
-  @Public()
-  sendMail(){
-    return this.testSendMail.testSendMail()
-  }
 }

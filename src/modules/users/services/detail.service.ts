@@ -1,8 +1,7 @@
-import { FilterQuery, Types } from 'mongoose';
-import { IListUserResponse, IUserResponse } from '../interfaces/user.interface';
+import { Types } from 'mongoose';
+import { IUserResponse } from '../interfaces/user.interface';
 import { BaseUserService } from './base.service';
-import aqp from 'api-query-params';
-import { BadGatewayException, UnauthorizedException } from '@nestjs/common';
+import { BadGatewayException } from '@nestjs/common';
 
 export class DetailUserService extends BaseUserService {
   async findByID(id: string): Promise<IUserResponse> {
@@ -28,8 +27,8 @@ export class DetailUserService extends BaseUserService {
     return result
   } 
 
-  async findByToken(token: string) {
-    const result = await this.userModel.findOne({ verificationToken: token});
+  async findByCode(code: string) {
+    const result = await this.userModel.findOne({ codeID: code});
     return result
   } 
 }
