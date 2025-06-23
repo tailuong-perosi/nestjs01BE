@@ -12,7 +12,7 @@ import {
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { LocalAuthGuard } from './passports/local-auth.guard';
-import { Public } from 'src/decorator/customize';
+import { Public, ResponseMessage } from 'src/decorator/customize';
 import { RegisterDto } from './dto/register.dto';
 
 @Controller('auth')
@@ -40,7 +40,8 @@ export class AuthController {
   // Dùng passport để đăng nhập thư viện xử lý logic
   @Post('login-handle')
   @Public()
-  @UseGuards(LocalAuthGuard) 
+  @UseGuards(LocalAuthGuard)
+  @ResponseMessage("handle login") // transform response
   async login(@Request() req) {
     return this.authService.login(req.user);
   }
