@@ -28,6 +28,7 @@ export class AuthController {
 
   @Post('register')
   @Public()
+  @ResponseMessage("handle register") // transform response
   signUP(@Body() registerDto: RegisterDto) {
     return this.authService.register(registerDto)
   }
