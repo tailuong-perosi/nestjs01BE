@@ -10,10 +10,12 @@ import { JwtAuthGuard } from './modules/auth/passports/jwt-auth.guard';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { TransformInterceptor } from './core/transform.interceptor';
+import { ProductsModule } from './modules/products/products.module';
 
 @Module({
   imports: [
     UsersModule,
+    ProductsModule,
     AuthModule,
     ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forRootAsync({

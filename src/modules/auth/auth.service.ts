@@ -9,13 +9,14 @@ import { comparePasswords } from 'src/helpers/ultil';
 import { UpdateUserService } from '../users/services/update.service';
 import { RegisterDto } from './dto/register.dto';
 import { CreateUserService } from '../users/services/create.service';
+import * as dayjs from 'dayjs';
 @Injectable()
 export class AuthService {
   constructor(
     private readonly detailUserService: DetailUserService,
     private readonly jwtService: JwtService,
     private readonly updateUserService: UpdateUserService,
-    private readonly createUserService: CreateUserService
+    private readonly createUserService: CreateUserService,
   ) {}
 
   async signIn(email: string, pass: string): Promise<any> {
@@ -47,22 +48,9 @@ export class AuthService {
       access_token: await this.jwtService.signAsync(payload),
     };
   }
-
-  register = async(data: RegisterDto)=>{
-    return await this.createUserService.handleRegister(data)
-  }
-
-  // xác thực code
-  async verifyEmail(code: string) {
-    const user = await this.detailUserService.findByCode(code);
-    if (!user) {
-      throw new BadRequestException('Code không hợp lệ');
-    }
-    const data = { ...user, isVerified: true, codeID: '' };
-    await this.updateUserService.update(data.id, data);
-
-    return { message: 'Xác nhận email thành công!' };
-  }
+  register = async (data: RegisterDto) => {
+    return await this.createUserService.handleRegister(data);
+  };
   // Dùng passport để đăng nhập
   async validateUser(username: string, pass: string): Promise<any> {
     const user = await this.detailUserService.findOne(username);
@@ -79,12 +67,43 @@ export class AuthService {
   async login(user: any) {
     const payload = { username: user.email, sub: user._id };
     return {
-      user:{
+      user: {
         email: user.email,
         id: user._id,
-        username: user.username
+        username: user.username,
       },
       access_token: this.jwtService.sign(payload),
     };
+  }
+
+  //resend email
+  async reSendEmail(body: any) {
+    const { email } = body;
+    const user = await this.detailUserService.findOne(email);
+    if (!user) {
+      throw new UnauthorizedException('Tài khoản không tồn tại');
+    }
+    return await this.updateUserService.updateCodeIDReSend(email);
+  }
+
+    // xác thực code
+  async verifyEmail(body: any) {
+    const { email, code } = body;
+    const user = await this.detailUserService.findOne(email);
+    if (!user) {
+      throw new UnauthorizedException('Email không tồn tại');
+    }
+    if (user.codeID !== code) {
+      throw new BadRequestException('Code không hợp lệ!');
+    }
+    if (dayjs().isAfter(user.codeExpired)) {
+      throw new BadRequestException('Code đã hết hiệu lực!');
+    }
+    const data = {
+      isVerified: true,
+      codeID: '',
+    };
+    await this.updateUserService.update(user.id, data);
+    return { message: 'Xác nhận email thành công!' };
   }
 }

@@ -3,7 +3,6 @@ import { CreateUserDto } from '../dto/create-user.dto';
 import { ICreateUserResponse } from '../interfaces/user.interface';
 import { BaseUserService } from './base.service';
 import { BadRequestException } from '@nestjs/common';
-import { randomBytes } from 'crypto';
 import { RegisterDto } from 'src/modules/auth/dto/register.dto';
 import * as dayjs from 'dayjs';
 import { v4 as uuidv4 } from 'uuid';
@@ -39,7 +38,6 @@ export class CreateUserService extends BaseUserService {
 
   async handleRegister(data: RegisterDto) {
     const { username, email, phone, password } = data;
-
     // check email
     const isExist = await this.isEmailExist(email);
     if (isExist) {

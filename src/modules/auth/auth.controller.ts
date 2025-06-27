@@ -7,7 +7,8 @@ import {
   Get,
   Query,
   UseGuards,
-  Request
+  Request,
+  Put,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
@@ -28,21 +29,22 @@ export class AuthController {
 
   @Post('register')
   @Public()
-  @ResponseMessage("handle register") // transform response
+  @ResponseMessage('handle register') // transform response
   signUP(@Body() registerDto: RegisterDto) {
-    return this.authService.register(registerDto)
+    return this.authService.register(registerDto);
   }
 
-  @Get('verify-email')
-  async verifyEmail(@Query('code') code: string) {
-    return this.authService.verifyEmail(code);
+  @Put('verify-email')
+  @Public()
+  async verifyEmail(@Body() body: any) {
+    return this.authService.verifyEmail(body);
   }
 
   // Dùng passport để đăng nhập thư viện xử lý logic
   @Post('login-handle')
   @Public()
   @UseGuards(LocalAuthGuard)
-  @ResponseMessage("handle login") // transform response
+  @ResponseMessage('handle login') // transform response
   async login(@Request() req) {
     return this.authService.login(req.user);
   }
@@ -52,5 +54,10 @@ export class AuthController {
   getProfile(@Request() req) {
     return req.user;
   }
-
+  //re send email
+  @Put('send-mail')
+  @Public()
+  async reSendMail(@Body() body: any) {
+    return this.authService.reSendEmail(body);
+  }
 }
