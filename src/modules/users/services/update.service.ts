@@ -1,4 +1,3 @@
-
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { ICreateUserResponse } from '../interfaces/user.interface';
 import { BaseUserService } from './base.service';
@@ -20,7 +19,10 @@ export class UpdateUserService extends BaseUserService {
       { email: email },
       { codeID: codeID, codeExpired: expired },
     );
-    this.sendMail.testSendMail(email, email, codeID);
+    this.mailService.sendMail(email, 'Xác nhận đăng ký tài khoản', 'register', {
+      name: email,
+      activationCode: codeID,
+    });
     return {
       message: `Đã gửi mã xác nhận đến ${email}`,
       id: '123',

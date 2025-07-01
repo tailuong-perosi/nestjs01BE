@@ -10,6 +10,7 @@ import { UpdateUserService } from '../users/services/update.service';
 import { RegisterDto } from './dto/register.dto';
 import { CreateUserService } from '../users/services/create.service';
 import * as dayjs from 'dayjs';
+import { MailService } from 'src/common/mail/mail.service';
 @Injectable()
 export class AuthService {
   constructor(

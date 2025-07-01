@@ -7,7 +7,7 @@ export class BaseRepository<T extends Document> {
   async findAll(){
     try {
       
-      const result = 
+      // const result = 
     } catch (error) {
       return Promise.reject({
         code: error.code,

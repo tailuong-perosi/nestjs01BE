@@ -53,12 +53,11 @@ export class CreateUserService extends BaseUserService {
       codeExpired: expired,
     });
 
-    // send mail 
-    this.sendMail.testSendMail(
-      email,
-      username ?? email,
-      codeID,
-    );
+    // send mail
+    this.mailService.sendMail(email, 'Xác nhận đăng ký tài khoản', 'register', {
+      name: username ?? email,
+      activationCode: codeID,
+    });
     return {
       message: 'Đăng ký User thành công',
       id: result.id,
